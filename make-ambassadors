@@ -1,0 +1,16 @@
+#!/bin/sh
+
+for CLUSTER in 1; do
+	for FROM in 1 2 3; do
+		MACHINE=$(sed -n -e 's/^# Machine: //p' < redis-${CLUSTER}-${FROM}.service)
+		MACHINEID=$(sed -n -e 's/^X-ConditionMachineID=//p' < redis-${CLUSTER}-${FROM}.service)
+		for TO in 1 2 3; do
+			sed -e "s/%%CLUSTER%%/${CLUSTER}/g" \
+			    -e "s/%%FROM%%/${FROM}/g" \
+			    -e "s/%%TO%%/${TO}/g" \
+			    -e "s/%%MACHINE%%/${MACHINE}/g" \
+			    -e "s/%%MACHINEID%%/${MACHINEID}/g" \
+			    < redis-amb.template > redis-${CLUSTER}-${FROM}-amb-${TO}.service
+		done
+	done
+done

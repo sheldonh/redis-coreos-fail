@@ -1,0 +1,17 @@
+[Unit]
+Description=Redis cluster %%CLUSTER%% instance %%FROM%% ambassador to instance %%TO%%
+After=docker.service
+Requires=docker.service
+
+[Service]
+Environment=UNIT=redis-%%CLUSTER%%-%%FROM%%-amb-%%TO%%
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill ${UNIT}
+ExecStartPre=-/usr/bin/docker rm ${UNIT}
+ExecStart=/usr/bin/docker run --name ${UNIT} -e SERVICE_NAME=${UNIT} progrium/ambassadord redis-%%CLUSTER%%-%%TO%%.service.consul
+ExecStop=/usr/bin/docker stop ${UNIT}
+
+[X-Fleet]
+# Machine: %%MACHINE%%
+X-ConditionMachineID=%%MACHINEID%%
+X-Conflicts=redis-%%CLUSTER%%-*-amb-%%TO%%.service

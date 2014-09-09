@@ -1,0 +1,17 @@
+[Unit]
+Description=Redis cluster 1 instance 2 ambassador to instance 1
+After=docker.service
+Requires=docker.service
+
+[Service]
+Environment=UNIT=redis-1-2-amb-1
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill ${UNIT}
+ExecStartPre=-/usr/bin/docker rm ${UNIT}
+ExecStart=/usr/bin/docker run --name ${UNIT} -e SERVICE_NAME=${UNIT} progrium/ambassadord redis-1-1.service.consul
+ExecStop=/usr/bin/docker stop ${UNIT}
+
+[X-Fleet]
+# Machine: core-02
+X-ConditionMachineID=ddb48170
+X-Conflicts=redis-1-*-amb-1.service
