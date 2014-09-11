@@ -1,0 +1,16 @@
+[Unit]
+Description=Redis cluster 1 slave 1 ambassador to master
+After=docker.service
+Requires=docker.service
+
+[Service]
+Environment=UNIT=redis-1-slave-1-amb-master
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill ${UNIT}
+ExecStartPre=-/usr/bin/docker rm ${UNIT}
+ExecStart=/usr/bin/docker run --rm --name ${UNIT} -e SERVICE_NAME=${UNIT} progrium/ambassadord redis-1-master.service.consul
+ExecStop=/usr/bin/docker stop ${UNIT}
+
+[X-Fleet]
+X-Conflicts=redis-1-*-amb-master.service
+X-Conflicts=redis-1-master.service

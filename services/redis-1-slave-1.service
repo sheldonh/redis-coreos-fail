@@ -1,0 +1,22 @@
+[Unit]
+Description=Redis cluster 1 slave 1
+After=docker.service
+Requires=docker.service
+After=redis-1-slave-1-amb-master.service
+Requires=redis-1-slave-1-amb-master.service
+
+[Service]
+Environment=UNIT=redis-1-slave-1
+Environment=VOLUME=/srv/volumes/redis-1
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/mkdir -p ${VOLUME}
+ExecStartPre=-/usr/bin/chown 999 ${VOLUME}
+ExecStartPre=-/usr/bin/docker kill ${UNIT}
+ExecStartPre=-/usr/bin/docker rm ${UNIT}
+ExecStart=/usr/bin/docker run --rm --name ${UNIT} -e SERVICE_NAME=${UNIT} -P -v ${VOLUME}:/data --link ${UNIT}-amb-master:master redis /bin/bash -c 'exec redis-server --appendonly yes --slaveof $${MASTER_PORT_10000_TCP_ADDR} 10000'
+ExecStop=/usr/bin/docker stop ${UNIT}
+
+[X-Fleet]
+X-Conflicts=redis-1-master.service
+X-Conflicts=redis-1-slave-?.service
+X-ConditionMachineOf=redis-1-slave-1-amb-master.service

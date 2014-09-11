@@ -1,0 +1,2 @@
+docker run -d --name redis-cli-amb-master progrium/ambassadord redis-1-master.service.consul
+docker run --rm -t -i --link redis-cli-amb-master:master redis /bin/bash -c 'exec redis-cli -h $MASTER_PORT_10000_TCP_ADDR -p 10000'

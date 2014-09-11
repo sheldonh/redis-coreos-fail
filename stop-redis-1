@@ -1,0 +1,11 @@
+#!/bin/sh
+
+for i in redis-1-master \
+	 redis-1-slave-2 \
+	 redis-1-slave-2-amb-master \
+	 redis-1-slave-1 \
+	 redis-1-slave-1-amb-master; do
+    fleetctl stop $i.service
+    fleetctl unload $i.service
+    fleetctl destroy $i.service
+done

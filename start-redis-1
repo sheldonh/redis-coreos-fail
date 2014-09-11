@@ -1,14 +1,9 @@
 #!/bin/sh
 
-fleetctl stop *.service
-fleetctl unload *.service
-fleetctl destroy *.service
-
-# Schedule redis before ambassadors so that ambassadors end up on the machines
-# mandated by the redises they serve.
-fleetctl submit redis-1-?.service
-fleetctl submit redis-1-?-amb-?.service
-
-# Start ambassadors before redises so that redises can --link to them.
-fleetctl start redis-1-?-amb-?.service
-fleetctl start redis-1-?.service
+for i in redis-1-slave-1-amb-master \
+	 redis-1-slave-1 \
+	 redis-1-slave-2-amb-master \
+	 redis-1-slave-2 \
+	 redis-1-master; do
+    fleetctl start $i.service
+done
