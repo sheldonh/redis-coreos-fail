@@ -5,5 +5,5 @@ for i in redis-1-slave-1-amb-master \
 	 redis-1-slave-2-amb-master \
 	 redis-1-slave-2 \
 	 redis-1-master; do
-    fleetctl start $i.service
+    fleetctl start services/$i.service
 done

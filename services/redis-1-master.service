@@ -11,7 +11,7 @@ ExecStartPre=-/usr/bin/mkdir -p ${VOLUME}
 ExecStartPre=-/usr/bin/chown 999 ${VOLUME}
 ExecStartPre=-/usr/bin/docker kill ${UNIT}
 ExecStartPre=-/usr/bin/docker rm ${UNIT}
-ExecStart=/usr/bin/docker run --rm --name ${UNIT} -e SERVICE_NAME=${UNIT} -P -v ${VOLUME}:/data redis redis-server --appendonly yes
+ExecStart=/usr/bin/docker run --name ${UNIT} -e SERVICE_NAME=${UNIT} -P -v ${VOLUME}:/data redis redis-server --appendonly yes
 ExecStop=/usr/bin/docker stop ${UNIT}
 
 [X-Fleet]

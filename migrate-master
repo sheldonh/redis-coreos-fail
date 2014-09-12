@@ -2,6 +2,30 @@
 
 node=$1
 
+service_up() {
+	service=$1
+	fleetctl list-units | grep -q "^redis-1-master.service.*[[:space:]]active.*running"
+	return $?
+}
+
+wait_for_service_up() {
+	for service in $*; do
+		while ! service_up $service; do
+			echo "info: waiting for $service to come up"
+			sleep 1
+		done
+	done
+}
+
+wait_for_service_down() {
+	for service in $*; do
+		while service_up $service; do
+			echo "info: waiting for $service to go down"
+			sleep 1
+		done
+	done
+}
+
 if [ ! -e services/redis-1-master.service ]; then
 	echo 'error: services/redis-1-master.service does not exist (check working directory?)' 1>&2
 	exit 1
@@ -28,6 +52,17 @@ done
 cat services/redis-1-master.service > redis-1-master.service || exit 1
 echo X-ConditionMachineID=$node >> redis-1-master.service
 
+fleetctl stop redis-1-master.service
+wait_for_service_down redis-1-master.service
+
+fleetctl stop $slaves
+wait_for_service_down $slaves
+
 fleetctl destroy redis-1-master.service $slaves
-fleetctl start redis-1-master.service $slave_files
+
+fleetctl start redis-1-master.service
+fleetctl start $slave_files
+
+wait_for_service_up redis-1-master.service $slaves
+
 fleetctl list-units | grep ^redis-1-

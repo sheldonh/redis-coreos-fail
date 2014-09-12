@@ -8,7 +8,7 @@ Environment=UNIT=redis-1-slave-1-amb-master
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill ${UNIT}
 ExecStartPre=-/usr/bin/docker rm ${UNIT}
-ExecStart=/usr/bin/docker run --rm --name ${UNIT} -e SERVICE_NAME=${UNIT} progrium/ambassadord redis-1-master.service.consul
+ExecStart=/usr/bin/docker run --name ${UNIT} -e SERVICE_NAME=${UNIT} -e PORT=6379 --expose=6379 progrium/ambassadord redis-1-master.service.consul
 ExecStop=/usr/bin/docker stop ${UNIT}
 
 [X-Fleet]

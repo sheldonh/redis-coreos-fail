@@ -13,7 +13,7 @@ ExecStartPre=-/usr/bin/mkdir -p ${VOLUME}
 ExecStartPre=-/usr/bin/chown 999 ${VOLUME}
 ExecStartPre=-/usr/bin/docker kill ${UNIT}
 ExecStartPre=-/usr/bin/docker rm ${UNIT}
-ExecStart=/usr/bin/docker run --rm --name ${UNIT} -e SERVICE_NAME=${UNIT} -P -v ${VOLUME}:/data --link ${UNIT}-amb-master:master redis /bin/bash -c 'exec redis-server --appendonly yes --slaveof $${MASTER_PORT_10000_TCP_ADDR} 10000'
+ExecStart=/usr/bin/docker run --name ${UNIT} -e SERVICE_NAME=${UNIT} -P -v ${VOLUME}:/data --link ${UNIT}-amb-master:master redis /bin/bash -c 'exec redis-server --appendonly yes --appendfsync always --slaveof $${MASTER_PORT_6379_TCP_ADDR} $${MASTER_PORT_6379_TCP_PORT}'
 ExecStop=/usr/bin/docker stop ${UNIT}
 
 [X-Fleet]
