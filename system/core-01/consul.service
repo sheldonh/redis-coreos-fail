@@ -1,0 +1,13 @@
+[Unit]
+Description=Consul agent bootstrap on 172.17.8.101
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker kill consul
+ExecStartPre=-/usr/bin/docker rm consul
+ExecStart=/usr/bin/docker run --name consul -h ${HOSTNAME} -p 172.17.8.101:8300:8300 -p 172.17.8.101:8301:8301 -p 172.17.8.101:8301:8301/udp -p 172.17.8.101:8302:8302 -p 172.17.8.101:8302:8302/udp -p 172.17.8.101:8400:8400 -p 172.17.8.101:8500:8500 -p 10.1.42.1:53:53/udp -v /srv/volume/consul:/data progrium/consul -server -advertise 172.17.8.101 -bootstrap-expect 3
+ExecStop=-/usr/bin/docker stop consul
+
+[Install]
+WantedBy=multiuser.target
