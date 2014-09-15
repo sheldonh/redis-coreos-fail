@@ -1,0 +1,8 @@
+---
+-
+  hosts: core
+  gather_facts: False
+  roles:
+    - { role: consul_bootstrap, when: consul_role == "bootstrap" }
+    - { role: consul_agent, when: consul_role == "agent" }
+    - consul_registrator

@@ -1,0 +1,9 @@
+---
+-
+  name: Install consul agent service
+  sudo: True
+  template: src=consul.service dest=/etc/systemd/system/consul.service
+-
+  name: Start consul agent service
+  sudo: True
+  service: name=consul state=started enabled=yes

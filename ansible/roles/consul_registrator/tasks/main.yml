@@ -1,0 +1,9 @@
+---
+-
+  name: Install consul registrator service
+  sudo: True
+  template: src=registrator.service dest=/etc/systemd/system/registrator.service
+-
+  name: Start consul registrator service
+  sudo: True
+  service: name=registrator state=started enabled=yes

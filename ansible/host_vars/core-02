@@ -1,0 +1,3 @@
+---
+coreos_private_ipv4: 172.17.8.102
+consul_role: agent

@@ -1,19 +1,18 @@
 [Unit]
-Description=Consul registrator on 172.17.8.103
+Description=Consul registrator
 After=docker.service
 Requires=docker.service
 After=consul.service
 Requires=consul.service
 
 [Service]
-EnvironmentFile=/etc/environment
 ExecStartPre=-/usr/bin/docker kill registrator
 ExecStartPre=-/usr/bin/docker rm registrator
 ExecStart=/usr/bin/docker run \
-	--name registrator \
-	-h ${HOSTNAME} \
-	-v /var/run/docker.sock:/tmp/docker.sock \
-	progrium/registrator consul://${COREOS_PRIVATE_IPV4}:8500/
+        --name registrator \
+        -h ${HOSTNAME} \
+        -v /var/run/docker.sock:/tmp/docker.sock \
+        progrium/registrator consul://{{coreos_private_ipv4}}:8500/
 ExecStop=-/usr/bin/docker stop registrator
 
 [Install]

@@ -1,0 +1,16 @@
+---
+-
+  hosts: core
+  gather_facts: False
+  vars:
+    pypy: pypy-2.3.1-linux_x86_64-portable
+  tasks:
+    -
+      name: Download a portable pypy
+      raw: curl -L https://bitbucket.org/squeaky/portable-pypy/downloads/{{pypy}}.tar.bz2 > /home/core/{{pypy}}.tar.bz2
+    -
+      name: Decompress portable pypy
+      raw: cd /home/core && tar -xf {{pypy}}.tar.bz2
+    -
+      name: Link portable pypy
+      raw: cd /home/core && ln -fs {{pypy}} pypy
