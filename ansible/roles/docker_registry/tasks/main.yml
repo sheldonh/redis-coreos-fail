@@ -1,0 +1,9 @@
+---
+-
+  name: Install docker registry service
+  sudo: True
+  template: src=docker-registry.service dest=/etc/systemd/system/docker-registry.service
+-
+  name: Start docker registry service
+  sudo: True
+  service: name=docker-registry state=started enabled=yes

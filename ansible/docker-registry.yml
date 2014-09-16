@@ -1,0 +1,6 @@
+---
+-
+  hosts: core-03
+  gather_facts: False
+  roles:
+    - docker_registry
